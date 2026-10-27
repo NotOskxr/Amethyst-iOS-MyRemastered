@@ -1,17 +1,17 @@
 package com.mojang.blaze3d.platform;
 
 /**
- * iOS stub shadowing Minecraft's MacosUtil.
+ * iOS replacement for Minecraft's MacosUtil, installed by PatchJNAAgent.
  *
  * The launcher reports os.name=Mac OS X, so Minecraft takes its macOS code
  * paths. MacosUtil drives AppKit through ca.weblite java-objc-bridge
  * (NSApplication / windowsMenu), which does not exist on iOS and crashes the
  * game during initialization.
  *
- * This no-op version is packaged inside launcher.jar, which the Pojav
- * classloader searches before the Minecraft client jar, so it shadows the
- * real class. Older versions never reach this code path (their call is gated
- * behind GLFW's cocoa backend check), so shadowing them is harmless.
+ * The compiled class is stored as a .class.patch resource in patchjna_agent.jar.
+ * The agent replaces the game class before its static initializer can load JNA.
+ * It is not an exported classpath package, avoiding Forge split-package errors.
+ * Older obfuscated versions do not match the agent's exact class name filter.
  *
  * IMPORTANT: this class must mirror every member Minecraft actually calls.
  * A missing member surfaces as NoSuchMethodError / NoSuchFieldError at
