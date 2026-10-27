@@ -102,6 +102,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Test iOS MacosUtil agent replacement
+        run: |
+          BOOTJDK="$(/usr/libexec/java_home -v 1.8)/bin" bash JavaApp/tests/test-macosutil-agent.sh
+
       - name: Drop stale submodule gitlinks
         # 历史遗留：MobileGL 曾以 submodule 方式接入，上游 force push 导致 pinned
         # commit 消失、孤立 gitlink 被反复引入，当时靠这个步骤清理。
